@@ -76,7 +76,6 @@ displayStats "${Dashes[@]}" $UsedLetters $Chances
 function main(){
 mainMenu
 game
-
 }
 
 main
