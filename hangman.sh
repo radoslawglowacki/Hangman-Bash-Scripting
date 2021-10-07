@@ -71,9 +71,44 @@ done
 
 }
 
+function wordContainsLetter(){
+
+local word=$1
+local letter=$2
+
+if [[ "${word,,}" == *"$letter"* ]]; then
+	echo true
+else
+	echo false 
+fi
+
+}
+
+function fillPlacesByLetter(){
+
+local word=$1
+local letter=$2
+local dashes=$3
+local newDashes=()
+
+for ((i = 0 ; i < ${#word} ; i++)); do
+  if [[ ${word:i:1} == *"$letter"* ]]; then
+		newDashes+=$letter
+	else
+		newDashes+="_"
+	fi
+	if [[ $i < "$((${#word}-1))" ]];
+	then
+		newDashes+=" "
+		fi
+done
+
+echo $newDashes
+}
+
 
 : '
-function checkGameStatus(){
+function canGameRun(){
 
 
 }
@@ -94,9 +129,17 @@ displayStats "${Dashes[@]}" $UsedLetters $Chances
 function main(){
 #mainMenu
 #game
-local Input=$(readUserInput)
-echo $Input
+#local Input=$(readUserInput)
+#echo $Input
+#local contain=$(wordContainsLetter Blaska b)
+#echo $contain 
 
+local SelectedWord=$(selectWord)
+local Dashes=$(preparingDashes $SelectedWord)
+
+Dashes=$(fillPlacesByLetter $SelectedWord n "${Dashes[@]}")
+
+echo "${Dashes[@]}"
 }
 
 main
