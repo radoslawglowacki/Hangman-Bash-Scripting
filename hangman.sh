@@ -57,9 +57,27 @@ Chances: $2
 "
 }
 
-# TODO
-# function to check result
-# main game engine
+function readUserInput(){
+while true; 
+do
+   read -p "Enter one lowercase letter: " VAR
+if [[ "${VAR}" =~ [^a-z] ]] || [ ${#VAR} -gt 1 ]; then
+    continue
+else
+    echo $VAR
+	return
+fi
+done
+
+}
+
+
+: '
+function checkGameStatus(){
+
+
+}
+'
 
 
 function game(){
@@ -74,8 +92,11 @@ displayStats "${Dashes[@]}" $UsedLetters $Chances
 
 
 function main(){
-mainMenu
-game
+#mainMenu
+#game
+local Input=$(readUserInput)
+echo $Input
+
 }
 
 main
