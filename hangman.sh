@@ -51,9 +51,9 @@ clear
 echo "
 Word to guess: $1
 
-Used letters: $3
+Used letters: $2
 
-Chances: $2
+Chances: $3
 "
 }
 
@@ -103,43 +103,68 @@ for ((i = 0 ; i < ${#word} ; i++)); do
 		fi
 done
 
-echo $newDashes
+echo ${newDashes[@]}
 }
 
+function checkWin(){
 
-: '
-function canGameRun(){
+local Dashes=$1
 
-
+if [[ ! " ${Dashes[*]} " =~ "_" ]]; then
+    echo true
+else
+	echo false
+fi
 }
-'
+
 
 
 function game(){
 local SelectedWord=$(selectWord)
 local Dashes=$(preparingDashes $SelectedWord)
 local UsedLetters=()
-local Chances=$(gameDifficult)
+Chances=$(gameDifficult)
 
+while (( $Chances >=0 )); do
+clear
 displayStats "${Dashes[@]}" $UsedLetters $Chances
+local Input=$(readUserInput)
+
+if [[ $(wordContainsLetter $SelectedWord $Input) ]]; then
+		Dashes=$(fillPlacesByLetter $SelectedWord $Input "${Dashes[@]}")
+	else
+		let Chances=$Chances-1
+fi
+	UsedLetters+=$Input
+: '
+if [[ $(checkWin "${Dashes[@]}") ]]; then
+	break
+fi
+'
+done
+echo  
 
 }
 
 
 function main(){
-#mainMenu
-#game
+mainMenu
+game
+}
+
+main
+
+
+
 #local Input=$(readUserInput)
 #echo $Input
 #local contain=$(wordContainsLetter Blaska b)
 #echo $contain 
-
+: '
 local SelectedWord=$(selectWord)
 local Dashes=$(preparingDashes $SelectedWord)
 
 Dashes=$(fillPlacesByLetter $SelectedWord n "${Dashes[@]}")
 
 echo "${Dashes[@]}"
-}
-
-main
+'
